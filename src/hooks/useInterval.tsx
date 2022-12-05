@@ -10,7 +10,6 @@ export const useInterval = (
     const interval = setInterval(() => {
       if (alphabet[index]) {
         execution();
-        console.log(alphabet[index], index);
         ++index;
       } else {
         clearInterval(interval);

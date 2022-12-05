@@ -100,6 +100,7 @@ export const MainContainer = styled.div<{ countrySelected: boolean }>`
     `};
 
   @media ${device.laptop} {
+    background-color: unset;
     width: unset;
     grid-template-columns: 20rem 40rem;
   }
