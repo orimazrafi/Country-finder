@@ -1,25 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
+import { lazy, Suspense, useCallback, useContext, useEffect } from 'react';
+import { ThemeProvider } from 'styled-components';
+import { useDispatch } from 'react-redux';
+
 import './App.css';
+import { useInterval } from './hooks/useInterval';
+import { getCountries } from './features/countrySlice';
+import { MainWrapper } from './elements';
+import { ContextUtil } from './inputContext';
+import Navbar from './components/Navbar';
+import { darkTheme, lightTheme } from './themes';
+import { alphabetArray, fifteenSeconds, firstAlphabet } from './helpers';
+import LoadingSpinner from './components/LoadingSpinner';
+import Main from './components/Main';
+
+const Country = lazy(() => import('./components/Country'));
+
+let secondIndex = 1;
 
 function App() {
+  const dispatch = useDispatch();
+  const { theme } = useContext(ContextUtil);
+
+  useEffect(() => {
+    dispatch(getCountries(firstAlphabet));
+  }, [dispatch]);
+
+  const execution = useCallback(() => {
+    dispatch(getCountries(alphabetArray[secondIndex]));
+    ++secondIndex;
+  }, [dispatch]);
+
+  useInterval(fifteenSeconds, secondIndex, alphabetArray, execution);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
+      <Navbar />
+      <MainWrapper>
+        <Main />
+        <Suspense fallback={<LoadingSpinner />}>
+          <Country />
+        </Suspense>
+      </MainWrapper>
+    </ThemeProvider>
   );
 }
 
