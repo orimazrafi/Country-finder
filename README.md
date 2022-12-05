@@ -16,26 +16,3 @@ React typescript managed with redux/toolkit App for fetching(based on interval) 
 4. Run the command **docker run  --name country-finder-p 3000:3000 -d  country-finder** the application should open on browser on http://localhost:3000.
 5. make sure there are no errors in console and enjoy the app.
 
-
-## Exercise office
-
-let idsBalances = {};
-function reduceIds(data) {
-  for (let key of Object.keys(data)) {
-    if (!Object.keys(data[key]).includes('addressBalance')) {
-      reduceIds(data[key]);
-    } else {
-      if (data[key].addressBalance) {
-        idsBalances = idsBalances[key]
-          ? {
-              ...idsBalances,
-              [key]: idsBalances[key] + data[key].addressBalance,
-            }
-          : { ...idsBalances, [key]: data[key].addressBalance };
-      }
-    }
-  }
-  return idsBalances;
-}
-
-
